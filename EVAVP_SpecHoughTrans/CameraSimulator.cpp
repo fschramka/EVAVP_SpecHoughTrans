@@ -14,7 +14,7 @@ CameraSimulator::CameraSimulator(int width, int height) {
 }
 
 
-unsigned char* CameraSimulator::getSingleImage(bool /*save*/, const char* /*imageName*/) {
+unsigned char* CameraSimulator::getSingleImage(bool hidePoint, const char* /*imageName*/) {
 
 	SDL_FillRect(m_image, NULL, 0);
 
@@ -25,10 +25,10 @@ unsigned char* CameraSimulator::getSingleImage(bool /*save*/, const char* /*imag
 	double s = m_image->h / 3;
 
 	int points[8] = {
-		(int)(x+s*sin(t+(a))),       (int)(y+s*cos(t+(a))),
-		(int)(x+s*sin(t+(M_PI-a))),  (int)(y+s*cos(t+(M_PI-a))),
-		(int)(x+s*sin(t+(M_PI+a))),  (int)(y+s*cos(t+(M_PI+a))),
-		(int)(x+s*sin(t+(2*M_PI-a))),(int)(y+s*cos(t+(2*M_PI-a))),
+		(int)(x + s*sin(t + (a))),       (int)(y + s*cos(t + (a))),
+		(int)(x + s*sin(t + (M_PI - a))),  (int)(y + s*cos(t + (M_PI - a))),
+		(int)(x + s*sin(t + (M_PI + a))),  (int)(y + s*cos(t + (M_PI + a))),
+		(int)(x + s*sin(t + (2 * M_PI - a))),(int)(y + s*cos(t + (2 * M_PI - a))),
 	};
 
 	SDL_LockSurface(m_image);
@@ -36,6 +36,17 @@ unsigned char* CameraSimulator::getSingleImage(bool /*save*/, const char* /*imag
 	drawLine(points[2], points[3], points[4], points[5], 0xff);
 	drawLine(points[4], points[5], points[6], points[7], 0xff);
 	drawLine(points[6], points[7], points[0], points[1], 0xff);
+
+	if (hidePoint) {
+		SDL_Rect r;
+		r.x = points[2] - 25;
+		r.y = points[3] - 25;
+		r.h = 50;
+		r.w = 50;
+
+		SDL_FillRect(m_image, &r, 0);
+	}
+
 	SDL_UnlockSurface(m_image);
 
 	m_count++;

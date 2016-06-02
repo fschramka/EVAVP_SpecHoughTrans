@@ -80,9 +80,6 @@ int main(int argc, char** argv){
 	SDL_Event e;
 	bool quit = false;
 
-	// activate the hough room
-	bool showHoughRoom = false;
-
 	PaperFinder pf(cols, rows);
 
 	SDL_Texture* texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_STREAMING, cols, rows);
@@ -100,6 +97,12 @@ int main(int argc, char** argv){
 	HoughTransform ht(cols, rows);
 	vector<pair<Point, Point>> houghPoints;
 	vector<Point> corners;
+
+	bool showGridLines = false;
+	bool showhoughLines = false;
+	bool showresult = false;
+	bool showHoughRoom = false;
+	bool hideCorner = false;
 
 	if(showHoughRoom){
 
@@ -124,9 +127,6 @@ int main(int argc, char** argv){
 	}
 
 	
-	bool showGridLines = false;
-	bool showhoughLines = false;
-
 
 	while(!quit){ 
 		
@@ -141,10 +141,16 @@ int main(int argc, char** argv){
 			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_h) {
 				showhoughLines = !showhoughLines;
 			}
+			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
+				showresult = !showresult;
+			}
+			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c) {
+				hideCorner = !hideCorner;
+			}
 		}
 
 		t1 = chrono::high_resolution_clock::now();
-		unsigned char* image = gCam->getSingleImage(false, "dummy");
+		unsigned char* image = gCam->getSingleImage(hideCorner, "dummy");
 		t2 = chrono::high_resolution_clock::now();
 
 		pf.setBuffer(image);
@@ -238,15 +244,17 @@ int main(int argc, char** argv){
 			}
 		}
 
-		SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255 );
-		for(Point p: corners){
-			SDL_Rect r;
-			r.x=p.getX()-visPointSize/2;
-			r.y=p.getY()-visPointSize/2;
-			r.h = visPointSize;
-			r.w = visPointSize;
-	
-			SDL_RenderFillRect(gRenderer, &r);
+		if (showresult) {
+			SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255);
+			for (Point p : corners) {
+				SDL_Rect r;
+				r.x = p.getX() - visPointSize / 2;
+				r.y = p.getY() - visPointSize / 2;
+				r.h = visPointSize;
+				r.w = visPointSize;
+
+				SDL_RenderFillRect(gRenderer, &r);
+			}
 		}
 
 		SDL_RenderPresent(gRenderer);

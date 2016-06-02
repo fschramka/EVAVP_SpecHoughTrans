@@ -49,9 +49,8 @@ vector<pair<Point,Point>> HoughTransform::transform(){
 			
 			// overflow handling
 			if(dataptr[(teta*p + i)+(teta*max_d/2)] < 255-4){
-				if(dataptr[(teta*p + i)+(teta*max_d/2)] > 25){
-					//cout << "i: " << i << " p: " << p << " index: " << dataptr[(teta*p + i)+(teta*max_d/2)] << " value: " << (teta*p + i)+(teta*max_d/2) << endl;
-					index.insert((teta*p + i)+(teta*max_d/2));
+				if (dataptr[(teta*p + i) + (teta*max_d / 2)] > 30) {
+					index.insert((teta*p + i) + (teta*max_d / 2));
 				}
 				dataptr[(teta*p + i)+(teta*max_d/2)] +=4;
 			}
