@@ -62,7 +62,6 @@ vector<pair<Point,Point>> HoughTransform::transform(){
 	priority_queue<Point, vector<Point>, decltype(&compare)> peakQueue(&compare);
 
 	for(int i : index){
-		// TODO refactor point class
 		if(dataptr[i] > 0)	{
 			peakQueue.push(Point(i%teta, (i - (teta*max_d/2) -i%teta) / teta , dataptr[i], false));
 		}
